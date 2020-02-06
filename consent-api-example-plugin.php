@@ -16,22 +16,26 @@ function example_plugin_enqueue_assets( $hook ) {
 }
 
 add_shortcode('example-plugin-shortcode', 'example_plugin_load_document');
-
 function example_plugin_load_document($atts = [], $content = null, $tag = '')
 {
 	$atts = array_change_key_case((array)$atts, CASE_LOWER);
 	ob_start();
 
 	// override default attributes with user attributes
-	$atts = shortcode_atts(['type' => false,], $atts, $tag);
+	$atts = shortcode_atts(['category' => 'marketing',], $atts, $tag);
+	//default
+	$category = 'marketing';
+	if (function_exists('wp_validate_consent_category')){
+		$category = wp_validate_consent_category($atts['category']);
+    }
 
 	?>
-	<div id="example-plugin-content">
+	<div id="example-plugin-content" data-consentcategory="<?php echo $category?>">
 		<div class="functional-content">
-			<h1>No consent has been given yet. </h1>
+			<h1>No consent has been given yet for category <?php echo $category?>. </h1>
 		</div>
 		<div class="marketing-content" style="display:none">
-			<h1>Woohoo! let's start tracking you :)</h1>
+			<h1>Woohoo! consent has been given for category <?php echo $category?> :)</h1>
 		</div>
 
 	</div>
