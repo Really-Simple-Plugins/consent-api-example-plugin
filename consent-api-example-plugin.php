@@ -9,15 +9,19 @@
  * Author: WP privacy team
  * Author URI:
  */
+
+
+$plugin_data = get_file_data( __FILE__, array( 'Version' => 'Version' ), false );
+define( 'CONSENT_API_EXAMPLE_PLUGIN_VERSION', $plugin_data['Version'] );$plugin = plugin_basename(__FILE__);
+
 /**
  * Tell the consent API we're following the api
  */
-$plugin = plugin_basename(__FILE__);
 add_filter("wp_consent_api_registered_$plugin", function(){return true;});
 
 add_action( 'wp_enqueue_scripts', 'example_plugin_enqueue_assets' );
 function example_plugin_enqueue_assets( $hook ) {
-	wp_enqueue_script( 'example-plugin', plugin_dir_url(__FILE__) . "main.js", array('jquery'), CONSENT_API_VERSION, true );
+	wp_enqueue_script( 'example-plugin', plugin_dir_url(__FILE__) . "main.js", array('jquery'), CONSENT_API_EXAMPLE_PLUGIN_VERSION, true );
 }
 
 add_shortcode('example-plugin-shortcode', 'example_plugin_load_document');
@@ -27,7 +31,7 @@ function example_plugin_load_document($atts = [], $content = null, $tag = '')
 	ob_start();
 
 	// override default attributes with user attributes
-	$atts = shortcode_atts(['category' => 'marketing',], $atts, $tag);
+	$atts = shortcode_atts(array('category' => 'marketing'), $atts, $tag);
 	//default
 	$category = 'marketing';
 	if (function_exists('wp_validate_consent_category')){
