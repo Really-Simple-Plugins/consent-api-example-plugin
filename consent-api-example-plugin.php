@@ -9,6 +9,11 @@
  * Author: WP privacy team
  * Author URI:
  */
+/**
+ * Tell the consent API we're following the api
+ */
+$plugin = plugin_basename(__FILE__);
+add_filter("wp_consent_api_registered_$plugin", function(){return true;});
 
 add_action( 'wp_enqueue_scripts', 'example_plugin_enqueue_assets' );
 function example_plugin_enqueue_assets( $hook ) {

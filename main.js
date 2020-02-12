@@ -7,7 +7,9 @@ jQuery(document).ready(function ($) {
      */
     console.log("load plugin example");
     document.addEventListener("wp_listen_for_consent_change", function (e) {
+        console.log('listen for consent events');
         var changedConsentCategory = e.detail;
+        console.log(changedConsentCategory);
         for (var key in changedConsentCategory) {
             if (changedConsentCategory.hasOwnProperty(key)) {
                 if (key === consentCategory && changedConsentCategory[key] === 'allow') {
