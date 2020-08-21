@@ -12,5 +12,5 @@ Simple plugin to demonstrate the usage of the WP Consent API.
 == Description ==
 Usage:
 1) add the shortcode [example-plugin-shortcode category='marketing'] to a page.
-2) Install a plugin with WP Consent API support (e.g. https://github.com/rlankhorst/complianz-gdpr/tree/consent-API-integration)
+2) Install a plugin with WP Consent API support (e.g. https://github.com/really-simple-plugins/complianz-gdpr)
 3) Install the WP Consent API (http://wordpress.org/plugins/wp-consent-api).
