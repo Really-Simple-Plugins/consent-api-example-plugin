@@ -1,0 +1,7 @@
+parameters:
+	excludePaths:
+		- vendor/
+	level: 1
+	treatPhpDocTypesAsCertain: false
+	paths:
+		- .

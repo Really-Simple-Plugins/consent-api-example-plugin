@@ -1,0 +1,29 @@
+{
+    "require-dev": {
+        "szepeviktor/phpstan-wordpress": "^1.3",
+        "phpcompatibility/php-compatibility": "^9.3",
+        "designsecurity/progpilot": "^1.0",
+        "wp-coding-standards/wpcs": "^3.0",
+        "phpstan/extension-installer": "^1.3"
+    },
+    "scripts": {
+        "cs-report": "vendor/bin/phpcs --ignore=*/vendor/ --standard=WordPress --extensions=php ./ -s",
+        "php:lint:autofix": "vendor/bin/phpcbf --ignore=*/vendor/ --standard=WordPress --extensions=php ./",
+        "php:lint:report": "vendor/bin/phpcs --ignore=*/vendor/ --standard=WordPress --extensions=php ./ --report=summary; phpcs --ignore=*/vendor/ --standard=WordPress --extensions=php ./ --report=source",
+        "php-compatibility": "vendor/bin/phpcs -ps ./* --ignore=*/vendor/ --extensions=php --standard=PHPCompatibility --runtime-set testVersion 7.0-8.2",
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon",
+        "progpilot": "vendor/bin/progpilot --configuration configuration.yml",
+        "run-all-checks": [
+            "@composer cs-report",
+            "@composer php-compatibility",
+            "@composer phpstan",
+            "@composer progpilot"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        }
+    }
+}
