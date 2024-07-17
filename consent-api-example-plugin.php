@@ -1,54 +1,176 @@
-<?php
+<?php //phpcs:ignore WordPress.Files.FileName.NotHyphenatedLowercase, WordPress.Files.FileName.InvalidClassFileName
 /**
  * Plugin Name: Example plugin for the WP Consent Level API
  * Plugin URI: https://www.wordpress.org/plugins/wp-consent-api
  * Description: Example plugin to demonstrate usage of the Consent API
- * Version: 1.0.0
+ * Version: 1.1.0
  * Text Domain: wp-consent-api
  * Domain Path: /languages
- * Author: WP privacy team
+ * Author: WP Privacy Team
  * Author URI:
  */
 
-
-$plugin_data = get_file_data( __FILE__, array( 'Version' => 'Version' ), false );
-define( 'CONSENT_API_EXAMPLE_PLUGIN_VERSION', $plugin_data['Version'] );$plugin = plugin_basename(__FILE__);
-
 /**
- * Tell the consent API we're following the api
+ * Class WP_Consent_API_Example_Plugin
+ *
+ * Main class for the WP Consent API Example Plugin.
  */
-add_filter("wp_consent_api_registered_$plugin", function(){return true;});
+class WP_Consent_API_Example_Plugin {
+	/**
+	 * Plugin version.
+	 *
+	 * @var string
+	 */
+	public $version = '1.1.0';
 
-add_action( 'wp_enqueue_scripts', 'example_plugin_enqueue_assets' );
-function example_plugin_enqueue_assets( $hook ) {
-	wp_enqueue_script( 'example-plugin', plugin_dir_url(__FILE__) . "main.js", array('jquery'), CONSENT_API_EXAMPLE_PLUGIN_VERSION, true );
+	/**
+	 * Plugin basename.
+	 *
+	 * @var string
+	 */
+	public $basename;
+
+	/**
+	 * Plugin directory URL.
+	 *
+	 * @var string
+	 */
+	public $dir_url;
+
+	/**
+	 * Plugin text domain.
+	 *
+	 * @var string
+	 */
+	public $domain = 'wp-consent-api';
+
+	/**
+	 * Shortcode for the plugin.
+	 *
+	 * @var string
+	 */
+	public $shortcode = 'example-plugin-shortcode';
+
+	/**
+	 * Content ID for the plugin.
+	 *
+	 * @var string
+	 */
+	public $content_id = 'wp-consent-example-content';
+
+	/**
+	 * Default categories for consent.
+	 *
+	 * @var array
+	 */
+	public $default_categories = array(
+		'functional',
+		'preferences',
+		'statistics',
+		'statistics-anonymous',
+		'marketing',
+	);
+
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		$this->basename = plugin_basename( __FILE__ );
+		$this->dir_url  = plugin_dir_url( __FILE__ );
+
+		add_filter( 'wp_consent_api_registered_' . $this->basename, array( $this, 'register_with_consent_api' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_shortcode( $this->shortcode, array( $this, 'render_shortcode' ) );
+	}
+
+	/**
+	 * Register with the Consent API.
+	 *
+	 * @return bool
+	 */
+	public function register_with_consent_api() {
+		return true;
+	}
+
+	/**
+	 * Enqueue the plugin's JavaScript assets.
+	 */
+	public function enqueue_assets() {
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		wp_enqueue_script(
+			'wp-consent-example-plugin',
+			$this->dir_url . "assets/consent-api-example$suffix.js",
+			array( 'jquery' ),
+			$this->version,
+			true
+		);
+
+		// Localize script to pass data to JavaScript.
+		wp_localize_script(
+			'wp-consent-example-plugin',
+			'wpConsentExampleData',
+			array(
+				'contentId' => $this->content_id,
+			)
+		);
+
+		// Enqueue styles.
+		wp_enqueue_style( 'wp-consent-example-plugin', $this->dir_url . 'assets/style.css', array(), $this->version );
+	}
+
+	/**
+	 * Render the shortcode content.
+	 *
+	 * @param   array $attributes  Shortcode attributes.
+	 *
+	 * @return string
+	 */
+	public function render_shortcode( array $attributes = array() ) {
+		$attributes = shortcode_atts(
+			array(
+				'category' => '',
+			),
+			$attributes,
+			$this->shortcode
+		);
+
+		$categories = $attributes['category'] ? array( sanitize_text_field( $attributes['category'] ) ) : $this->default_categories;
+
+		ob_start();
+		?>
+		<div id="<?php echo esc_attr( $this->content_id ); ?>" class="wp-consent-example">
+			<?php foreach ( $categories as $category ) : ?>
+				<?php $this->render_category_content( $category ); ?>
+			<?php endforeach; ?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render the category content.
+	 *
+	 * @param   string $category  The consent category.
+	 */
+	public function render_category_content( $category ) {
+		?>
+		<div class="category-container <?php echo esc_attr( $category ); ?>-content" data-consentcategory="<?php echo esc_attr( $category ); ?>">
+			<h4 class="no-consent-given">
+				<?php
+				// translators: %s: Consent category name.
+				printf( esc_html__( 'No consent has been given yet for %s category.', 'wp-consent-api' ), '<strong>' . esc_html( $category ) . '</strong>' );
+				?>
+			</h4>
+			<h4 class="consent-given" style="display: none;">
+				<?php
+				// translators: %s: Consent category name.
+				printf( esc_html__( 'Consent has been given for %s category.', 'wp-consent-api' ), '<strong>' . esc_html( $category ) . '</strong>' );
+				?>
+			</h4>
+		</div>
+		<?php
+	}
 }
 
-add_shortcode('example-plugin-shortcode', 'example_plugin_load_document');
-function example_plugin_load_document($atts = [], $content = null, $tag = '')
-{
-	$atts = array_change_key_case((array)$atts, CASE_LOWER);
-	ob_start();
-
-	// override default attributes with user attributes
-	$atts = shortcode_atts(array('category' => 'marketing'), $atts, $tag);
-	//default
-	$category = 'marketing';
-	if (function_exists('wp_validate_consent_category')){
-		$category = wp_validate_consent_category($atts['category']);
-    }
-
-	?>
-	<div id="example-plugin-content" data-consentcategory="<?php echo $category?>">
-		<div class="functional-content">
-			<h1>No consent has been given yet for category <?php echo $category?>. </h1>
-		</div>
-		<div class="marketing-content" style="display:none">
-			<h1>Woohoo! consent has been given for category <?php echo $category?> :)</h1>
-		</div>
-
-	</div>
-
-	<?php
-	return ob_get_clean();
-}
+// Initialize the plugin.
+new WP_Consent_API_Example_Plugin();

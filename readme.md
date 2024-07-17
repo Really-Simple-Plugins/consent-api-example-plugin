@@ -1,18 +1,24 @@
-=== Consent API Example plugin ===
+## Consent API Example plugin
 Contributors: RogierLankhorst
+
 Tags: consent, privacy
+
 Requires at least: 5.0
+
 License: GPL2
+
 Tested up to: 6.6.0
+
 Requires PHP: 5.6
+
 Stable tag: 1.1.0
 
 Simple plugin to demonstrate the usage of the WP Consent API.
 
-== Description ==
+### Description
 This plugin demonstrates the usage of the WP Consent API. It provides a shortcode that can be used to display content based on the user's consent for different categories.
 
-== Usage ==
+### Usage
 To use this plugin, add the appropriate shortcode to your pages or posts as described below:
 
 1. **Display Content for All Categories**
@@ -32,29 +38,29 @@ To use this plugin, add the appropriate shortcode to your pages or posts as desc
      - [Iubenda Cookie Law Solution](https://wordpress.org/plugins/iubenda-cookie-law-solution/)
    - Install the [WP Consent API](http://wordpress.org/plugins/wp-consent-api).
 
-== Installation ==
+### Installation
 1. Upload the plugin files to the `/wp-content/plugins/wp-consent-api-example-plugin` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
 3. Use the shortcode `[example-plugin-shortcode]` in your posts or pages to display content for all categories.
 4. Use the shortcode `[example-plugin-shortcode category='marketing']` (or other categories such as 'functional', 'preferences', 'statistics', 'statistics-anonymous') to display content for a specific category.
 
-== Frequently Asked Questions ==
+### Frequently Asked Questions
 
-= How do I use the shortcode? =
-You can use the shortcode `[example-plugin-shortcode category='marketing']` to display content for the 'marketing' consent category. If no category is specified, it will display content for all categories.
+1. How do I use the shortcode?
+   * You can use the shortcode `[example-plugin-shortcode category='marketing']` to display content for the 'marketing' consent category. If no category is specified, it will display content for all categories.
 
-= Do I need any other plugins for this to work? =
-Yes, you need to install a plugin that supports the WP Consent API and the WP Consent API plugin itself. Examples include:
-- [Complianz GDPR](https://github.com/really-simple-plugins/complianz-gdpr)
-- [Iubenda Cookie Law Solution](https://wordpress.org/plugins/iubenda-cookie-law-solution/)
-- [WP Consent API](http://wordpress.org/plugins/wp-consent-api)
+2. Do I need any other plugins for this to work?
+   * Yes, you need to install a plugin that supports the WP Consent API and the WP Consent API plugin itself. Examples include:
+   - [Complianz GDPR](https://github.com/really-simple-plugins/complianz-gdpr)
+   - [Iubenda Cookie Law Solution](https://wordpress.org/plugins/iubenda-cookie-law-solution/)
+   - [WP Consent API](http://wordpress.org/plugins/wp-consent-api)
 
-== Changelog ==
+### Changelog
 
-= 1.1.0 =
+#### 1.1.0
 * Applied code standards and improved documentation.
 * Enhanced the readme with detailed usage instructions.
 * Added support for multiple categories in shortcode usage examples.
 
-= 1.0.0 =
+#### 1.0.0
 * Initial release.

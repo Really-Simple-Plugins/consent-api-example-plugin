@@ -1,0 +1,7 @@
+.wp-consent-example .category-container .no-consent-given {
+    color: red;
+}
+
+.wp-consent-example .category-container .consent-given {
+    color: green;
+}
