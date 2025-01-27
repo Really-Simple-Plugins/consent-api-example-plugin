@@ -10,7 +10,7 @@ jQuery(document).ready(function ($) {
         console.log('listen for consent events');
         var changedConsentCategory = e.detail;
         console.log(changedConsentCategory);
-        for (var key in changedConsentCategory) {
+        for (let key in changedConsentCategory) {
             if (changedConsentCategory.hasOwnProperty(key)) {
                 if (key === consentCategory && changedConsentCategory[key] === 'allow') {
                     console.log("set "+consentCategory+" cookie on user actions");
@@ -26,6 +26,14 @@ jQuery(document).ready(function ($) {
     $(document).on("wp_consent_type_defined", activateMyCookies);
 
     function activateMyCookies(consentData) {
+        console.log("check service");
+        if (wp_has_consent(consentCategory, 'service')) {
+            console.log("do "+consentCategory+" cookie stuff");
+        } else {
+            console.log("no "+consentCategory+" cookies please");
+        }
+
+        console.log("check category")
         //your code here
         if (wp_has_consent(consentCategory)) {
             console.log("do "+consentCategory+" cookie stuff");
